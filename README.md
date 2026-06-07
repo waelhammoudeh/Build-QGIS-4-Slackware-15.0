@@ -6,7 +6,7 @@ of helping somebody.
 
 
 This build was done on a clean Slackware 15.0 installation updated recently with
-slackpkg tool (clean == no multi-libaray and no any other packages).
+slackpkg tool. (clean == no multilib and no any other packages).
 
 
 In this process I built QGIS version 3.44.11 (currently at 3.44.1 on SBo), upgraded
@@ -107,12 +107,12 @@ use this when building packages from our local repository.
 When using multiple options, the order they are listed is important the three I
 use most should be listed in this order { -B -k -i queuefile }, if -V is used it
 must be the first option listed - it seems to me that sbopkg option parsing can
-use some improvment or I do not understand something!
+use some improvement or I do not understand something!
 
 Sbopkg allows you to change files and build your own packages, it does that through
 the **concept of local and original** file. The original file is the unchanged retrieved
 file from SBo server. Every time a file is retrieved from the server an md5 for it
-is caculated and recorded by sbopkg. Every time this file is used, sbopkg checks
+is calculated and recorded by sbopkg. Every time this file is used, sbopkg checks
 its md5, if it does not match its record, then the file is deleted and a new copy
 is retrieved from the server.
 
@@ -221,7 +221,7 @@ JDK-25 is the current long term support version.
 I did not try any other Java for this build.
 
 
-**Changes and sbo4qgos.sh script:**
+**Changes and sbo4qgis.sh script:**
 
 Five packages required changes for their build to go through for different reasons.
 In addition SlackBuild script for "grass" package was replaced entirely and a new
