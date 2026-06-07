@@ -1,0 +1,21 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.
+# Line up the first '|' above the ':' following the base package name, and
+# the '|' on the right side marks the last column you can put a character in.
+# You must make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':' except on otherwise blank lines.
+
+
+          |-----handy-ruler------------------------------------------------------|
+gdal-grass: GRASS GIS extension for the GDAL library
+gdal-grass:
+gdal-grass: GDAL is a translator library for raster geospatial data formats.
+gdal-grass: As a library, it presents a single abstract data model to the
+gdal-grass: calling application for all supported formats. This extension
+gdal-grass: provides access to GRASS data via GDAL.
+gdal-grass:
+gdal-grass: This package contains the two standalone GDAL-GRASS GIS drivers,
+gdal-grass: namely grass raster and grass vector drivers. See sites:
+gdal-grass:    https://grass.osgeo.org/
+gdal-grass:    https://gdal.org/
+gdal-grass:

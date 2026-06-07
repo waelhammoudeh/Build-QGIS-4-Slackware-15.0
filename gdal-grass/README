@@ -1,0 +1,16 @@
+
+Description: GRASS GIS extension for the GDAL library
+
+GDAL is a translator library for raster geospatial data formats.
+As a library, it presents a single abstract data model to the
+calling application for all supported formats. This extension
+provides access to GRASS data via GDAL.
+
+This package contains the two standalone GDAL-GRASS GIS drivers,
+the raster driver and the vector driver for GRASS GIS raster and vector
+file support in GDAL.
+
+This approach avoids circular dependencies with GRASS depending on GDAL,
+but GDAL with GRASS support depending on GRASS. With this driver package
+you configure and install GDAL normally, then build and install GRASS normally
+and finally build and install this driver.
