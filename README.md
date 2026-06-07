@@ -229,7 +229,39 @@ package for gdal-grass drivers was added. Script "sbo4qgis.sh" will write ALL
 required files to your system, maintain the file system structure found on the
 repository since the script uses files included there.
 
-TODO: List changed packages and reason for each here (all listed in script).
+**Applied fixes:**
+
+  - pybind11.SlackBuild:
+
+    Problem: script builds okay when package is not installed and produces skelton package
+    when installed; second time it is built it hoses down your good package on installation.
+
+    Fix: added "--force-reinstall" option to python3 install call
+
+  - graphviz.SlackBuild:
+
+    Problem: failed to build when R statistical package is installed. (seems a known issue for years!)
+
+    Fix: build graphviz by disabling R support with "--enable-r=no" added to ./configure step.
+
+  - ITK.SlackBuild (InsightToolkit)
+
+    Problem: build failed during cmake configuration
+
+    Fix: changed cmake setting "-DITK_USE_SYSTEM_LIBRARIES" from ON to OFF.
+
+  - qgis.SlackBuild:
+
+    Problem: dead items list in Help box.
+
+    Fix: make a link to "doc" directory instead of moving it.
+
+  - libspatialindex.SlackBuild
+
+    Problem: newer QGIS do not build against version >= 2.1.0
+
+    Fix: down graded package to version 2.0.0
+
 
 After you run "sbo4qgis.sh" script you need to apply your own changes to my queuefiles
  now in your sbopkg queues directory: "/var/lib/sbopkg/queues/" for options I have
@@ -293,6 +325,8 @@ Here is a list of all commands to all queuefiles:
   # sbopkg -B -k -i qgis-9-optional.sqf
 
 ```
+
+Total packages built in this process were 155 packages on my system.
 
 Wael Hammoudeh
 
