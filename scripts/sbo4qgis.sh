@@ -40,7 +40,7 @@ set -e
 # ├── package-list
 # └── README.md
 #
-# Script writes progress to log file "/tmp/sbo4qgis.sh"
+# Script writes its progress to log file "/tmp/sbo4qgis.sh"
 #
 # THIS SCRIPT IS FOR ILLUSTRATION PURPOSE, THERE IS NO GUARANTEE OF ITS
 # CORRECTNESS, USE AT YOUR OWN RISK.
@@ -372,8 +372,6 @@ cp -a $QUEUE_DIR/* $SBO_ROOT/queues
 log "Copied queuefiles to $SBO_ROOT/queues directory"
 
 # create local repository and copy new directories for grass and gdal-grass drivers
-
-SBO_ROOT=/var/lib/sbopkg
 
 mkdir -p $SBO_ROOT/local/WH/gis
 cp -a $GRASS_DIR $SBO_ROOT/local/WH/gis

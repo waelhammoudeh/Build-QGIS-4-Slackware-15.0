@@ -1,7 +1,7 @@
 # Build QGIS on Slackware 15.0
 
-I had to rebuild QGIS on my system from SlackBuilds.org recently, [Sbopkg utility](https://sbopkg.org/)
-was utilized for this build. This was time consuming and this writing is here in hope
+I had to rebuild QGIS on my system from SlackBuilds.org recently, [sbopkg](https://sbopkg.org/)
+program was utilized for this build. This was time consuming and this writing is here in hope
 of helping somebody.
 
 
@@ -10,8 +10,9 @@ slackpkg tool. (clean == no multilib and no any other packages).
 
 
 In this process I built QGIS version 3.44.11 (currently at 3.44.1 on SBo), upgraded
-GRASS with new SlackBuild script to version 8.4.2 (currently at 7.8.0 on SBo) and
-added a new package for gdal-grass drivers with its required SlackBuild files.
+"grass" package with new SlackBuild script to version 8.4.2 (currently at 7.8.0 on SBo) and
+added a new package for "gdal-grass" drivers with its required SlackBuild files (this
+was split from upstream).
 
 
 Packages were built with their required and **most optional** packages. Some options
@@ -20,6 +21,19 @@ were passed to SlackBuild script for some packages.
 
 Without specifics to hardware; you need a multi-core machine with decent amount
 of memory and disk space plus internet connection for this build.
+
+**To help speed up the build process,** consider mounting your `/tmp` directory
+as a `tmpfs` filesystem if your system has sufficient RAM available. This can
+significantly reduce disk I/O during package builds.
+
+For example, on a system with 48 GB of RAM, I allocate 24 GB to `/tmp` by adding
+the following entry to `/etc/fstab`:
+
+```
+tmpfs        /tmp        tmpfs        defaults,size=24G,mode=1777,nosuid,nodev 0 0
+```
+
+Adjust the `size=` parameter as appropriate for your system and workload.
 
 
 I assume you have some knowledge of Slackware package handling, so there is not
@@ -32,6 +46,16 @@ A Slackware package for sbopkg is [here](https://github.com/sbopkg/sbopkg/releas
 
 This build required changes to many files from SlackBuilds org. A bash script is
 provided here to write those changed files to your system. See "sbo4qgis.sh" below.
+
+This build recipe will not age well, as SlackBuild scripts and source packages
+change over time. The instructions here were last tested during a successful QGIS
+build on Sunday, June 7, 2026.
+
+The versions of all packages used and produced during that build are listed in the
+`package-list` file in this repository.
+
+Since I do not upgrade software very often, this repository may not receive frequent
+updates.
 
 
 **About sbopkg:**
@@ -97,15 +121,15 @@ changes this behaviour - which is what I want most of the time - with this optio
 use if a package is installed, sbopkg does not build it again.
 
 The -i option is to build and install the package in one go, I build a package to
-install it and most likely is required to build next package. This option is used
-in almost all my sbopkg calls. You could just build a package without installation
-with the -b option.
+install it and most likely it is required to build the next package. This option
+is used in almost all my sbopkg calls. You could just build a package without
+installation with the -b option.
 
 The -V option is used to tell sbopkg which repository to use in that command, we
 use this when building packages from our local repository.
 
-When using multiple options, the order they are listed is important the three I
-use most should be listed in this order { -B -k -i queuefile }, if -V is used it
+When using multiple options, the order they are listed is important, the three I
+use the most should be listed in this order { -B -k -i queuefile }, if -V is used it
 must be the first option listed - it seems to me that sbopkg option parsing can
 use some improvement or I do not understand something!
 
