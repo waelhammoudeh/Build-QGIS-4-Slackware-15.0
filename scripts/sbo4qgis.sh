@@ -18,11 +18,29 @@ set -e
 # - academic/ITK
 # - gis/qgis
 #
+# Script copies sbopkg queuefiles from "sbo-queues" directory to sbopkg queues
+# directory.
+#
 # Script also creates 'sbopkg' local repository and populates it under 'gis'
 # category with two packages directories; "grass" and "gdal-grass" (Drivers).
 #
 # Scripts uses files in this repository and file system structure needs to be
 # kept as is for script to find its files.
+# Script assumes file system structure below:
+# .
+# ├── gdal-grass
+# ├── grass
+# ├── java-Slackware-current
+# ├── sbo-queues
+# ├── scripts
+# │   ├── graphviz.patch
+# │   ├── libspatialindex-2.0.0.tar.gz.md5
+# │   ├── qgis-3.44.11.tar.bz2.md5
+# │   └── sbo4qgis.sh
+# ├── package-list
+# └── README.md
+#
+# Script writes progress to log file "/tmp/sbo4qgis.sh"
 #
 # THIS SCRIPT IS FOR ILLUSTRATION PURPOSE, THERE IS NO GUARANTEE OF ITS
 # CORRECTNESS, USE AT YOUR OWN RISK.
@@ -41,6 +59,7 @@ E_UNKNOWN=6
 # CWD=$(pwd)
 
 REPO=/var/lib/sbopkg/SBo/15.0
+SBO_ROOT=/var/lib/sbopkg
 
 SCRIPT_DIR="$(dirname $(realpath $0))"
 
@@ -350,6 +369,8 @@ sed -i 's|mv $PKG/usr/share/$PRGNAM/doc|ln -s $PKG/usr/share/$PRGNAM/doc|' $LOCA
 # copy queuefiles
 cp -a $QUEUE_DIR/* $SBO_ROOT/queues
 
+log "Copied queuefiles to $SBO_ROOT/queues directory"
+
 # create local repository and copy new directories for grass and gdal-grass drivers
 
 SBO_ROOT=/var/lib/sbopkg
@@ -358,7 +379,7 @@ mkdir -p $SBO_ROOT/local/WH/gis
 cp -a $GRASS_DIR $SBO_ROOT/local/WH/gis
 cp -a $DRIVER_DIR $SBO_ROOT/local/WH/gis
 
-# this should take care of most cases ... I still can think of few others!
+# this should take care of most cases ...any others!
 if [[ -d "$SBO_ROOT/local/local" && ! -L "$SBO_ROOT/local/local" ]]; then
     log "There is a local repository in your sbopkg setup, make sure to"
     log "include grass and gdal-grass directories in your repository"
@@ -368,12 +389,16 @@ elif [[ -L "$SBO_ROOT/local/local" && \
     log "There is a local repository in your sbopkg that does not point to WH"
     log "You need to include grass and gdal-grass directories in your"
     log "repository, or change the link to point to $SBO_ROOT/local/WH."
+    log "Warning: Incomplete local repository setup."
 
 else
-    ln -s "$SBO_ROOT/local/WH" "$SBO_ROOT/local/local"
-    log "link created"
+    if [[ ! -L  "$SBO_ROOT/local/local" ]]; then
+	ln -s "$SBO_ROOT/local/WH" "$SBO_ROOT/local/local"
+	log "link created"
+    fi
 fi
 
+log ""
 log "Script $scriptName is done okay."
 log ""
 
