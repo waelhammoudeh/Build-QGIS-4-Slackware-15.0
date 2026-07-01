@@ -5,7 +5,7 @@ python3-installer
 python3-wheel
 python3-pyproject-hooks
 python3-build
-python3-meson-opt
+# python3-meson-opt
 libsoup3
 xdg-dbus-proxy
 libwpe

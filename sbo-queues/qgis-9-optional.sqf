@@ -31,7 +31,7 @@ python3-pyproject-hooks
 python3-build
 python3-packaging-opt
 python3-wheel
-python3-meson-opt
+# python3-meson-opt
 python3-setuptools-opt
 python3-pyproject-metadata
 python3-mesonpy
@@ -41,7 +41,7 @@ podofo
 freexl
 librttopo
 libspatialite
-netcdf
+netcdf | HDF4=YES
 xerces-c
 
 # to enable opencl uncomment line AND comment out the other line.
@@ -57,7 +57,7 @@ python3-installer
 python3-wheel
 python3-pyproject-hooks
 python3-build
-python3-meson-opt
+# python3-meson-opt
 libsoup3
 xdg-dbus-proxy
 libwpe

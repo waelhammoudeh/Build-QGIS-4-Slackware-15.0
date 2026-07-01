@@ -1,23 +1,34 @@
 # Build QGIS on Slackware 15.0
 
+This is an update for my recipe and script to reflect changes made to build scripts
+on SlackBuilds.org repository, I was very glad to see those changes and thank you
+for all maintainers.
+
+This recipe was last tested to build QGIS version 3.44.11 on Slackware64 15.0 on
+Tuesday June 30th/2026.
+
+If you already built a working QGIS 3.44.11 package using my earlier recipe and
+script, there is nothing new for you here.
+
+If you tried and were unable to build a working QGIS package, you have your work
+cut out for you! Then you need to remove ALL packages that were built before you
+were forced to stop plus remove your local sbopkg directory with all its sub-directories.
+Then do a new rsync with SlackBuilds repository using `sbopkg -r` command. You then
+can follow instructions below to build QGIS.
+
 I had to rebuild QGIS on my system from SlackBuilds.org recently, [sbopkg](https://sbopkg.org/)
 program was utilized for this build. This was time consuming and this writing is here in hope
 of helping somebody.
 
-
 This build was done on a clean Slackware 15.0 installation updated recently with
 slackpkg tool. (clean == no multilib and no any other packages).
 
-
-In this process I built QGIS version 3.44.11 (currently at 3.44.1 on SBo), upgraded
-"grass" package with new SlackBuild script to version 8.4.2 (currently at 7.8.0 on SBo) and
+In this process I built QGIS version 3.44.11 (currently at 3.44.1 on SBo), and
 added a new package for "gdal-grass" drivers with its required SlackBuild files (this
 was split from upstream).
 
-
 Packages were built with their required and **most optional** packages. Some options
 were passed to SlackBuild script for some packages.
-
 
 Without specifics to hardware; you need a multi-core machine with decent amount
 of memory and disk space plus internet connection for this build.
@@ -35,26 +46,23 @@ tmpfs        /tmp        tmpfs        defaults,size=24G,mode=1777,nosuid,nodev 0
 
 Adjust the `size=` parameter as appropriate for your system and workload.
 
-
 I assume you have some knowledge of Slackware package handling, so there is not
 much details here. In addition you need to install sbopkg and know its basic usage.
 Read about sbopkg usage on [docs.slackware.com here](https://docs.slackware.com/howtos:slackware_admin:building_packages_with_sbopkg).
 
-
 A Slackware package for sbopkg is [here](https://github.com/sbopkg/sbopkg/releases/download/0.38.3/sbopkg-0.38.3-noarch-1_wsr.tgz).
 
-
-This build required changes to many files from SlackBuilds org. A bash script is
+This build required changes to some files from SlackBuilds org. A bash script is
 provided here to write those changed files to your system. See "sbo4qgis.sh" below.
 
 This build recipe will not age well, as SlackBuild scripts and source packages
 change over time. The instructions here were last tested during a successful QGIS
-build on Sunday, June 7, 2026.
+build on Tuesday June 30th/2026.
 
 The versions of all packages used and produced during that build are listed in the
 `package-list` file in this repository.
 
-Since I do not upgrade software very often, this repository may not receive frequent
+Since I do not upgrade software very often, this repository will not receive frequent
 updates.
 
 
@@ -130,8 +138,7 @@ use this when building packages from our local repository.
 
 When using multiple options, the order they are listed is important, the three I
 use the most should be listed in this order { -B -k -i queuefile }, if -V is used it
-must be the first option listed - it seems to me that sbopkg option parsing can
-use some improvement or I do not understand something!
+must be the first option listed.
 
 Sbopkg allows you to change files and build your own packages, it does that through
 the **concept of local and original** file. The original file is the unchanged retrieved
@@ -183,6 +190,11 @@ Those options depend on your hardware and your "Java" installation.
 
 **Install and Configure Sbopkg:**
 
+If you have a previous installation of "sbopkg" on your system, remove "SBo/15.0"
+directory and sub-directories to start with a fresh unmodified repository. This
+is because `sbopkg -r` does not remove modified files with .sbopkg extension.
+
+
 If you did not install sbopkg yet; download the ready made Slackware [sbopkg package](https://github.com/sbopkg/sbopkg/releases/download/0.38.3/sbopkg-0.38.3-noarch-1_wsr.tgz) and install it in your system.
 
 Configure and synchronize with SlackBuilds.org repository with:
@@ -220,6 +232,13 @@ installed, if not install it with:
   ~# slackpkg install gcc-gfortran
 ```
 
+Update and upgrade Slackware64 15.0 with "slackpkg":
+
+```
+  ~# slackpkg update
+  ~# slackpkg upgrade-all
+```
+
 **Non-sbopkg installs:**
 
 Start the build process by installing "postgresql18" and Oracle "Jdk" without
@@ -236,7 +255,6 @@ match that installed in your system.
 Postgresql is an optional package for GDAL; however it is required for QGIS
 (it requires postgis)
 
-
 Java is an optional package for GDAL. I install Oracle Java SDK version 25.0 using
 Pat's build script from **slackware-current** not 15.0. Get Pat's Java SlackBuild
 script from [here](https://mirror.slackbuilds.org/slackware/slackware64-current/extra/java/)
@@ -247,26 +265,12 @@ I did not try any other Java for this build.
 
 **Changes and sbo4qgis.sh script:**
 
-Five packages required changes for their build to go through for different reasons.
-In addition SlackBuild script for "grass" package was replaced entirely and a new
-package for gdal-grass drivers was added. Script "sbo4qgis.sh" will write ALL
-required files to your system, maintain the file system structure found on the
-repository since the script uses files included there.
+Three packages required changes for their build to go through for different reasons.
+In addition a new SlackBuild script for "gdal-grass" drivers was added. The script
+"sbo4qgis.sh" will write ALL required files to your system, maintain the file system
+structure found on the repository since the script uses files included there.
 
 **Applied fixes:**
-
-  - pybind11.SlackBuild:
-
-    Problem: script builds okay when package is not installed and produces skelton package
-    when installed; second time it is built it hoses down your good package on installation.
-
-    Fix: added "--force-reinstall" option to python3 install call
-
-  - graphviz.SlackBuild:
-
-    Problem: failed to build when R statistical package is installed. (seems a known issue for years!)
-
-    Fix: build graphviz by disabling R support with "--enable-r=no" added to ./configure step.
 
   - ITK.SlackBuild (InsightToolkit)
 
@@ -276,7 +280,7 @@ repository since the script uses files included there.
 
   - qgis.SlackBuild:
 
-    Problem: dead items list in Help box.
+    Problem: in addition to upgrade package; the Help box list items were dead.
 
     Fix: make a link to "doc" directory instead of moving it.
 
@@ -286,10 +290,15 @@ repository since the script uses files included there.
 
     Fix: down graded package to version 2.0.0
 
+**Options you may need to adjust in queuefiles:**
 
 After you run "sbo4qgis.sh" script you need to apply your own changes to my queuefiles
- now in your sbopkg queues directory: "/var/lib/sbopkg/queues/" for options I have
-set that do not agree with your system.
+now in your sbopkg queues directory: "/var/lib/sbopkg/queues/" for options I have
+set or not set that do not agree with your system.
+
+Option lines that you may need to adjusment are listed below along with the queuefiles
+they are in. Note that each option should match across ALL queuefiles.
+
 
 ```
 # postgresql18
@@ -305,10 +314,8 @@ in queuefiles: "qgis-1-gdal-1.sqf", "qgis-2-gdal-2.sqf" "postgis.sqf" "qgis-9-op
 in queuefile: "qgis-8-qgis.sqf"
 ```
 
-Option you change should match across all queuefiles.
-
-**Avoid a bang on start:**
-**Wrong source name for libecwj2 Package:**
+## Avoid a bang on start:
+**Wrong source filename for libecwj2 Package:**
 Sbopkg downloads source files to its cache directory, the source for this package
 gets the funny name **download** then sbopkg throws an error! One way to avoid
 this error is to download the source with sbopkg -d switch (option) which fetches
@@ -340,6 +347,17 @@ Here is a list of all commands to all queuefiles:
 
   # sbopkg -B -k -i qgis-5-grass-3.sqf
 
+  # sbopkg -i grass
+```
+
+After building grass package execute commands below:
+```
+  # echo /opt/grass/lib > /etc/ld.so.conf.d/grass.conf && ldconfig
+```
+
+then continue with the rest of queuefiles below:
+
+```
   # sbopkg -V local -B -i qgis-6-gdal-grass.sqf
 
   # sbopkg -B -k -i qgis-7-req.sqf
@@ -350,8 +368,8 @@ Here is a list of all commands to all queuefiles:
 
 ```
 
-Total packages built in this process were 155 packages on my system.
+Total packages built in this process were 154 packages on my system.
 
 Wael Hammoudeh
 
-June 7/2026
+June 30/2026

@@ -22,7 +22,7 @@ python3-scikit-build-core
 pybind11
 python3-toml
 importlib-resources
-python3-meson-opt
+# python3-meson-opt
 python3-pyproject-metadata
 python3-mesonpy
 python3-cython-opt

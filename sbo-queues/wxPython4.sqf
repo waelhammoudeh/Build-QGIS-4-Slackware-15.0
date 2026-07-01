@@ -10,7 +10,7 @@ python3-attrdict
 python3-pathlib2
 nanosvg
 unifdef
-python3-meson-opt
+# python3-meson-opt
 libsoup3
 xdg-dbus-proxy
 libwpe

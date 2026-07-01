@@ -12,9 +12,7 @@ set -e
 #
 # Script modifies / writes new files in the following synchronized SBo repo
 # directories:
-# - python/pybind11
 # - gis/libspatialindex
-# - graphic/graphviz
 # - academic/ITK
 # - gis/qgis
 #
@@ -22,18 +20,16 @@ set -e
 # directory.
 #
 # Script also creates 'sbopkg' local repository and populates it under 'gis'
-# category with two packages directories; "grass" and "gdal-grass" (Drivers).
+# category with one package directory "gdal-grass" (Drivers).
 #
 # Scripts uses files in this repository and file system structure needs to be
 # kept as is for script to find its files.
 # Script assumes file system structure below:
 # .
 # ├── gdal-grass
-# ├── grass
 # ├── java-Slackware-current
 # ├── sbo-queues
 # ├── scripts
-# │   ├── graphviz.patch
 # │   ├── libspatialindex-2.0.0.tar.gz.md5
 # │   ├── qgis-3.44.11.tar.bz2.md5
 # │   └── sbo4qgis.sh
@@ -63,7 +59,7 @@ SBO_ROOT=/var/lib/sbopkg
 
 SCRIPT_DIR="$(dirname $(realpath $0))"
 
-GRASS_DIR="$(dirname ${SCRIPT_DIR})/grass"
+# GRASS_DIR="$(dirname ${SCRIPT_DIR})/grass84"
 DRIVER_DIR="$(dirname ${SCRIPT_DIR})/gdal-grass"
 QUEUE_DIR="$(dirname ${SCRIPT_DIR})/sbo-queues"
 
@@ -189,14 +185,12 @@ check_sbo_repository() {
     return $EXIT_SUCCESS
 }
 
-# lots of files to add & maybe all files we change need to be included here
+# required files for this script are listed here
 check_own_files() {
 
     local OWN_FILES=(
        libspatialindex-2.0.0.tar.gz.md5
        qgis-3.44.11.tar.bz2.md5
-       graphviz.patch
-
     )
 
     log "Ckecking our own files..."
@@ -214,6 +208,11 @@ check_own_files() {
     return $EXIT_SUCCESS
 
 }
+
+# info is retrieved from an existing (provided) md5 file for called package
+# 2 files are provided:
+#  1) libspatialindex-2.0.0.tar.gz.md5
+#  2) qgis-3.44.11.tar.bz2.md5
 
 write_pkg_sb_info() {
 
@@ -303,41 +302,13 @@ check_sbopkg_installation || exit $?
 check_sbo_repository     || exit $?
 
 # check own directories and files
-chk_directories $GRASS_DIR $DRIVER_DIR || exit $?
+chk_directories $DRIVER_DIR || exit $?
 
 check_own_files || exit $?
 
 # all checks went okay ... start work
 log "$scriptName: All checks went okay, congratulation."
 log ""
-
-# fix bug in graphviz.SlackBuild failing to build when R statistical package is installed
-# reason is some cpp error below:
-# gv_R.cpp: In function ‘SEXPREC* SWIG_MakePtr(void*, const char*, int)’:
-# gv_R.cpp:1023:3: error: ‘SET_S4_OBJECT’ was not declared in this scope; did you mean ‘NEW_OBJECT’?
-# looked to me like very involved to fix!
-# fix: build graphviz by disabling R support with --enable-r=no added to ./configure step
-#
-# copy original SlackBuild to local SlackBuild then modify local copy
-ORIGNAL_SB=$REPO/graphics/graphviz/graphviz.SlackBuild
-LOCAL_SB=$ORIGNAL_SB.sbopkg
-
-# patch our local SlackBuild using patch in this directory
-cp $ORIGNAL_SB $LOCAL_SB
-patch -N $LOCAL_SB < "${SCRIPT_DIR}"/graphviz.patch
-
-# fix bug in pybind11.SlackBuild
-# script builds okay when package is not installed and produces skelton package
-# when installed; second time it is built it hoses down your good package
-# fix by adding --force-reinstall option to python3 install call
-
-# copy original SlackBuild to local SlackBuild then modify local copy
-ORIGNAL_SB=$REPO/python/pybind11/pybind11.SlackBuild
-LOCAL_SB=$ORIGNAL_SB.sbopkg
-
-cp $ORIGNAL_SB $LOCAL_SB
-sed -i 's|python3 -m pip install dist/\*\.whl|python3 -m pip install --force-reinstall dist/*.whl|' \
-        $LOCAL_SB
 
 # fix ITK.SlackBuild (InsightToolkit)
 # package build fails during cmake configuration
@@ -374,7 +345,7 @@ log "Copied queuefiles to $SBO_ROOT/queues directory"
 # create local repository and copy new directories for grass and gdal-grass drivers
 
 mkdir -p $SBO_ROOT/local/WH/gis
-cp -a $GRASS_DIR $SBO_ROOT/local/WH/gis
+# cp -a $GRASS_DIR $SBO_ROOT/local/WH/gis
 cp -a $DRIVER_DIR $SBO_ROOT/local/WH/gis
 
 # this should take care of most cases ...any others!
