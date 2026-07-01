@@ -369,6 +369,7 @@ then continue with the rest of queuefiles below:
 ```
 
 Total packages built in this process were 154 packages on my system.
+See "package-list" file for built packages and their version numbers.
 
 Wael Hammoudeh
 
