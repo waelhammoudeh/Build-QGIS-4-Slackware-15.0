@@ -13,8 +13,8 @@ script, there is nothing new for you here.
 If you tried and were unable to build a working QGIS package, you have your work
 cut out for you! Then you need to remove ALL packages that were built before you
 were forced to stop plus remove your local sbopkg directory with all its sub-directories.
-Then do a new rsync with SlackBuilds repository using `sbopkg -r` command. You then
-can follow instructions below to build QGIS.
+Then do a new rsync with SlackBuilds repository using `sbopkg -r` command. You can then
+follow instructions below to build QGIS.
 
 I had to rebuild QGIS on my system from SlackBuilds.org recently, [sbopkg](https://sbopkg.org/)
 program was utilized for this build. This was time consuming and this writing is here in hope
@@ -232,7 +232,7 @@ installed, if not install it with:
   ~# slackpkg install gcc-gfortran
 ```
 
-Update and upgrade Slackware64 15.0 with "slackpkg":
+Update and upgrade Slackware64 15.0 with "slackpkg" (assuming slackpkg setup here?):
 
 ```
   ~# slackpkg update
@@ -346,11 +346,14 @@ Here is a list of all commands to all queuefiles:
   # sbopkg -B -k -i qgis-4-grass-2.sqf
 
   # sbopkg -B -k -i qgis-5-grass-3.sqf
+```
 
+Build updated "Grass" package from SlackBuilds.org by itself with sbopkg:
+```
   # sbopkg -i grass
 ```
 
-After building grass package execute commands below:
+After building "Grass" package execute commands below:
 ```
   # echo /opt/grass/lib > /etc/ld.so.conf.d/grass.conf && ldconfig
 ```
